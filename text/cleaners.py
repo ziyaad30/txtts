@@ -65,7 +65,7 @@ def english_cleaners(text):
     text = word_filter(text)
     # text = text.replace('-', ' ')
     text = text.replace(':', ' ')
-    # text = text.replace('"', '')
+    text = text.replace('"', '')
     text = expand_numbers(text)
     text = expand_abbreviations(text)
     text = collapse_whitespace(text)
