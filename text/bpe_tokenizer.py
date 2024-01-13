@@ -6,7 +6,7 @@ from tokenizers import Tokenizer
 
 from text.cleaners import english_cleaners
 
-DEFAULT_VOCAB_FILE = None
+DEFAULT_VOCAB_FILE = "/kaggle/working/txtts/data/tokenizer.json"
 
 
 def remove_extraneous_punctuation(word):
