@@ -6,7 +6,7 @@
     "dvae_path": "./train_models/dvae.pth",
     "mel_dir": "./mels",
     "seed": 0,
-    "batch_size": 2,
+    "batch_size": 16,
     "gradient_steps" : 8,
     "num_workers" : 0,
     "pin_memory" : false,
