@@ -1,5 +1,5 @@
 {
-  "vocab": "data/tokenizer.json",
+  "vocab": "./data/tokenizer.json",
   "gpt_batch_size": 1,
   "gpt_train": {
     "train_file": "./fileslist/train.txt",
