@@ -1,0 +1,49 @@
+{
+  "vocab": "data/tokenizer.json",
+  "gpt_batch_size": 1,
+  "gpt_train": {
+    "train_file": "./fileslist/train.txt",
+    "dvae_path": "./train_models/dvae.pth",
+    "mel_dir": "./mels",
+    "seed": 0,
+    "batch_size": 2,
+    "gradient_steps" : 8,
+    "num_workers" : 0,
+    "pin_memory" : false,
+    "loss_text_weight": 0.01,
+    "loss_mel_weight": 1.0,
+    "milestones": [20000, 30000, 35000],
+    "log_step": 50,
+    "eval_step": 50,
+    "total_epochs": 10000,
+    "lr": 1e-4,
+    "log_dir": "logs/gpt",
+    "model_dir": "gpt_models",
+    "pre_fix": "gpt"
+  },
+  "gpt": {
+    "layers": 15,
+    "model_dim": 1024,
+    "start_text_token": 255,
+    "stop_text_token": 0,
+    "heads": 16,
+    "max_text_tokens": 402,
+    "max_mel_tokens": 605,
+    "max_prompt_tokens": 70,
+    "number_text_tokens": 256,
+    "num_audio_tokens": 8194,
+    "start_audio_token": 8192,
+    "stop_audio_token": 8193,
+    "use_perceiver_resampler": true,
+    "code_stride_len": 1024
+  },
+  "hifigan": {
+    "input_sample_rate": 22050,
+    "output_sample_rate": 24000,
+    "output_hop_length": 256,
+    "ar_mel_length_compression": 1024,
+    "decoder_input_dim": 1024,
+    "d_vector_dim": 512,
+    "cond_d_vector_in_each_upsampling_layer": true
+  }
+}
