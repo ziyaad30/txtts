@@ -33,7 +33,9 @@ class VoiceBpeTokenizer:
     def __init__(self, vocab_file=None):
         if vocab_file is not None:
             print(f">>> Vocab file {vocab_file} loaded")
-        self.tokenizer = Tokenizer.from_file(vocab_file)
+        self.tokenizer = Tokenizer.from_file(
+            DEFAULT_VOCAB_FILE if vocab_file is None else vocab_file
+        )
 
     def preprocess_text(self, txt):
         txt = english_cleaners(txt)
