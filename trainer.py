@@ -275,7 +275,7 @@ def work(config_path):
             # loss = loss / accum
             loss.backward()
 
-            grad_norm = torch.nn.utils.clip_grad_norm_(xtts.gpt.parameters(), max_norm=1)
+            grad_norm = get_grad_norm(xtts.gpt)
 
             """if step % accum == 0:
                 print('>> optimizing...')"""
