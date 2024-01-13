@@ -6,7 +6,7 @@ from tokenizers import Tokenizer
 
 from text.cleaners import english_cleaners
 
-DEFAULT_VOCAB_FILE = "../data/tokenizer.json"
+DEFAULT_VOCAB_FILE = None
 
 
 def remove_extraneous_punctuation(word):
