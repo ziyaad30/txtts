@@ -30,12 +30,9 @@ def remove_extraneous_punctuation(word):
 
 
 class VoiceBpeTokenizer:
-    def __init__(self, vocab_file=None):
-        if vocab_file is not None:
-            print(f">>> Vocab file {vocab_file} loaded")
-        self.tokenizer = Tokenizer.from_file(
-            DEFAULT_VOCAB_FILE if vocab_file is None else vocab_file
-        )
+    def __init__(self, vocab_file="/kaggle/working/txtts/data/tokenizer.json"):
+        print(f">>> Vocab file {vocab_file} loaded")
+        self.tokenizer = Tokenizer.from_file(DEFAULT_VOCAB_FILE)
 
     def preprocess_text(self, txt):
         txt = english_cleaners(txt)
