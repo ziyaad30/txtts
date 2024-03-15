@@ -208,8 +208,8 @@ class Trainer(object):
 
                 if self.step % self.save_freq == 0:
                     self.save()
-                    total_losses, text_losses, mel_losses = self.eval()
-                    print(total_losses, text_losses, mel_losses)
+                    # total_losses, text_losses, mel_losses = self.eval()
+                    # print(total_losses, text_losses, mel_losses)
 
                 self.step += 1
             self.epoch += 1
