@@ -17,9 +17,9 @@
   "gpt_dataloader": {
     "batch_size" : 8,
     "shuffle": true,
-    "num_workers": 4,
+    "num_workers": 0,
     "drop_last": false,
-    "pin_memory": true
+    "pin_memory": false
   },
   "vae_train": {
     "train_file": "./david_dataset/train.txt",
