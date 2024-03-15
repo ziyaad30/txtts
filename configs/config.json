@@ -15,11 +15,11 @@
     "accum_grad": 1
   },
   "gpt_dataloader": {
-    "batch_size" : 2,
+    "batch_size" : 8,
     "shuffle": true,
-    "num_workers": 0,
+    "num_workers": 4,
     "drop_last": false,
-    "pin_memory": false
+    "pin_memory": true
   },
   "vae_train": {
     "train_file": "./david_dataset/train.txt",
