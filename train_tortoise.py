@@ -90,7 +90,7 @@ class Trainer(object):
         self.logs_folder = Path(self.cfg['gpt_train']['logs_dir'])
         self.logs_folder.mkdir(exist_ok=True, parents=True)
 
-        self.mel_folder = Path('mels')
+        self.mel_folder = Path(self.cfg['gpt_train']['mel_dir'])
         self.mel_folder.mkdir(exist_ok=True, parents=True)
 
         self.optimizer = AdamW(self.gpt.parameters(), lr=self.cfg['gpt_train']['lr'], betas=(0.9, 0.96),
