@@ -10,6 +10,6 @@ inflect~=7.0.0
 scipy~=1.11.4
 numpy~=1.24.1
 nltk~=3.8.1
-gradio~=4.13.0
+gdown
 vocos~=0.1.0
 tokenizers
