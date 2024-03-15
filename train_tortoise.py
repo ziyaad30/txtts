@@ -174,21 +174,22 @@ class Trainer(object):
                 loss_dict["loss"] = loss_dict["loss_text_ce"] + loss_dict["loss_mel_ce"]
                 lr = self.scheduler.get_last_lr()[0]
 
-                print(
-                    'Epoch: {}/{}, '
-                    'Step: {}, '
-                    'loss_text_ce: {:.7f}, '
-                    'loss_mel_ce: {:.7f}, '
-                    'total_loss: {:.7f}, '
-                    'grad_norm: {:.7f}, '
-                    'lr: {:.7f}'
-                    .format(
-                        self.epoch, self.total_epochs, self.step, loss_dict["loss_text_ce"], loss_dict["loss_mel_ce"],
-                        loss_dict["loss"],
-                        grad_norm,
-                        lr
+                if self.step % 50 == 0:
+                    print(
+                        'Epoch: {}/{}, '
+                        'Step: {}, '
+                        'loss_text_ce: {:.7f}, '
+                        'loss_mel_ce: {:.7f}, '
+                        'total_loss: {:.7f}, '
+                        'grad_norm: {:.7f}, '
+                        'lr: {:.7f}'
+                        .format(
+                            self.epoch, self.total_epochs, self.step, loss_dict["loss_text_ce"], loss_dict["loss_mel_ce"],
+                            loss_dict["loss"],
+                            grad_norm,
+                            lr
+                        )
                     )
-                )
 
                 if self.step % self.val_freq == 0:
                     scalar_dict = {
