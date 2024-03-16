@@ -22,8 +22,8 @@
     "pin_memory": false
   },
   "vae_train": {
-    "train_file": "./david_dataset/train.txt",
-    "valid_file": "./david_dataset/valid.txt",
+    "train_file": "./dataset/train.txt",
+    "valid_file": "./dataset/valid.txt",
     "logs_dir": "logs/dvae",
     "pad_to_samples": 200,
     "sample_rate": 24000,
