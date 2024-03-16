@@ -48,7 +48,7 @@ class Trainer(object):
                                                       sampling_rate=self.sample_rate,
                                                       mel_fmax=self.mel_fmax)
 
-        self.tokenizer = TextBpeTokenizer()
+        self.tokenizer = VoiceBpeTokenizer()
 
         self.gpt = TortoiseVoice(
             model_dim=1024,
