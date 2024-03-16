@@ -11,7 +11,7 @@ from torch.utils.tensorboard import SummaryWriter
 from audio.injectors import TortoiseMelSpectrogramInjector, Codes2MelInjector
 from common.custom_dataset import GptDataset
 from models.gpt.gpt import TortoiseVoice
-from text.text_tokenizer import TextBpeTokenizer
+from text.voice_tokenizer import VoiceBpeTokenizer
 from utils.utils import latest_checkpoint_path, oldest_checkpoint_path, summarize, plot_spectrogram_to_numpy
 from vocoder.vocos import Vocos
 
@@ -47,7 +47,7 @@ class Trainer(object):
                                                       sampling_rate=self.sample_rate,
                                                       mel_fmax=self.mel_fmax)
 
-        self.tokenizer = TextBpeTokenizer()
+        self.tokenizer = VoiceBpeTokenizer()
 
         self.gpt = TortoiseVoice(
             model_dim=1024,
