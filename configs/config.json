@@ -7,7 +7,7 @@
     "seed": 0,
     "train_epochs": 100,
     "val_freq": 100,
-    "save_freq": 500,
+    "save_freq": 250,
     "keep_ckpts": 4,
     "lr": 1e-4,
     "text_weight": 0.01,
