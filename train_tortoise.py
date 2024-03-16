@@ -136,7 +136,7 @@ class Trainer(object):
                 pass
             if 'model' in gpt_checkpoint:
                 gpt_checkpoint = gpt_checkpoint['model']
-            self.gpt.load_state_dict(gpt_checkpoint, strict=True)
+            self.gpt.load_state_dict(gpt_checkpoint, strict=False)
             print(f'GPT restored from {model_path}')
         except Exception as e:
             print(e)
