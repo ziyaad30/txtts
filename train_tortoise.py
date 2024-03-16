@@ -220,7 +220,7 @@ class Trainer(object):
         self.save()
         print(f'Training complete with {self.step} steps.')
 
-        def eval_model(self):
+    def eval_model(self):
         print('Evaluating...')
         self.gpt.eval()
         self.gpt.post_init_gpt2_config()
