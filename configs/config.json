@@ -1,7 +1,7 @@
 {
   "gpt_train": {
-    "train_file": "./david_dataset/valid.txt",
-    "valid_file": "./david_dataset/valid.txt",
+    "train_file": "./dataset/valid.txt",
+    "valid_file": "./dataset/valid.txt",
     "mel_dir": "./david_mels",
     "logs_dir": "logs/gpt",
     "seed": 0,
