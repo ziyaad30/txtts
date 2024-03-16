@@ -64,6 +64,9 @@ class Trainer(object):
             hifigan_in_sample_rate=self.sample_rate
         )
 
+        hifigan_checkpoint = torch.load('pretrained_models/hifigan_decoder.pth', map_location=torch.device("cpu"))
+        self.gpt.hifigan_decoder.load_state_dict(hifigan_checkpoint["model"], strict=True)
+
         dvae_model_path = latest_checkpoint_path(self.cfg['vae_train']['logs_dir'], f"dvae_[0-9]*")
         # dvae_model_path = "C:/Users/User/PycharmProjects/pythonProject/logs/dvae/dvae.pth"
         print(f'DVAE model loaded from {dvae_model_path}')
@@ -261,7 +264,7 @@ class Trainer(object):
             wav_out = self.gpt.hifigan_decoder(latent, g=speaker_embedding).detach().cpu()
             hifi_mel = self.mel_inj({'wav': wav_out})['mel']
             dvae_mel = self.code_mel({'codes': codes[:, :-1]})['mel'][0]
-            audio = self.vocos.decode(dvae_mel)
+            # audio = self.vocos.decode(dvae_mel)
 
             with torch.no_grad():
                 image_dict = {
@@ -271,7 +274,7 @@ class Trainer(object):
                 }
                 audios_dict = {
                     "gpt/gen_audio": wav_out,
-                    "gpt/gen_audio_2": audio,
+                    # "gpt/gen_audio_2": audio,
                     "gpt/gt_audio": wav[0, :, :].detach().cpu(),
                 }
 
