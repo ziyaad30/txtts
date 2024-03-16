@@ -12,10 +12,8 @@ from audio.injectors import TortoiseMelSpectrogramInjector, Codes2MelInjector
 from common.custom_dataset import GptDataset
 from models.gpt.gpt import TortoiseVoice
 from text.phon_tokenizer import PhonTokenizer
-from text.voice_tokenizer import VoiceBpeTokenizer
-from text.text_tokenizer import TextBpeTokenizer
+
 from utils.utils import latest_checkpoint_path, oldest_checkpoint_path, summarize, plot_spectrogram_to_numpy
-from vocoder.vocos import Vocos
 
 
 def warmup(step):
