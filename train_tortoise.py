@@ -207,9 +207,9 @@ class Trainer(object):
                     )
 
                 if self.step % self.save_freq == 0:
+                    print('Saving...')
                     self.save()
-                    # total_losses, text_losses, mel_losses = self.eval()
-                    # print(total_losses, text_losses, mel_losses)
+                    self.eval_model()
 
                 self.step += 1
             self.epoch += 1
@@ -217,28 +217,85 @@ class Trainer(object):
         self.save()
         print(f'Training complete with {self.step} steps.')
 
-    def eval(self):
+        def eval_model(self):
+        print('Evaluating...')
         self.gpt.eval()
-        text_losses = mel_losses = total_losses = 0.
-        num_samples = 0
+        self.gpt.post_init_gpt2_config()
 
-        for batch_idx, batch in enumerate(self.eval_dataloader):
-            input_data = [batch['padded_cond_mel'], batch['text_inputs'], batch['text_lens'],
-                          batch['padded_quant_mel'], batch['wav_lens']]
-            input_data = [d.to('cuda') for d in input_data]
+        for idx, batch in enumerate(self.eval_dataloader):
+            if idx == 1:
+                break
+            text_tokens = batch['text_inputs'].to('cuda')
+            mel_padded = batch['padded_mel']
+            cond_mel = batch['padded_cond_mel'].to('cuda')
+            wav = batch['wav']
 
-            loss_text, loss_mel, mel_logits = self.gpt(*input_data)
-            num_sample = input_data[0].shape[0]
-            text_losses += loss_text * num_sample
-            mel_losses += loss_mel * num_sample
-            num_samples += num_sample
+            """text = "This model sounds really good and above all, it's reasonably fast."
+            seq = self.tokenizer.encode(text)
+            text_tokens = torch.IntTensor(seq).unsqueeze(0).to('cuda')
+            text_tokens = F.pad(text_tokens, (0, 1))  # This may not be necessary.
+            text_tokens = text_tokens.to('cuda')"""
+            with torch.no_grad():
+                codes = self.gpt.inference_speech(cond_mel, text_tokens,
+                                                  do_sample=True,
+                                                  top_p=.8,
+                                                  temperature=.8,
+                                                  num_return_sequences=1,
+                                                  length_penalty=1.0,
+                                                  repetition_penalty=2.0,
+                                                  max_generate_length=600)
 
-            text_losses /= num_samples
-            mel_losses /= num_samples
-            total_losses = text_losses * self.text_loss_weight + mel_losses * self.mel_loss_weight
+                text_len = torch.tensor([text_tokens.shape[-1]], device=text_tokens.device)
+                expected_output_len = torch.tensor(
+                    [codes.shape[-1] * self.gpt.mel_length_compression], device=text_tokens.device
+                )
 
+                latent = self.gpt(cond_mel,
+                                  text_tokens,
+                                  text_len,
+                                  codes,
+                                  expected_output_len,
+                                  return_latent=True)
+
+            speaker_embedding = self.gpt.get_speaker_embedding(self.spk_audio, self.sample_rate)
+            wav_out = self.gpt.hifigan_decoder(latent, g=speaker_embedding).detach().cpu()
+            hifi_mel = self.mel_inj({'wav': wav_out})['mel']
+            dvae_mel = self.code_mel({'codes': codes[:, :-1]})['mel'][0]
+            audio = self.vocos.decode(dvae_mel)
+
+            with torch.no_grad():
+                image_dict = {
+                    "gpt/gen_mel_hifi": plot_spectrogram_to_numpy(hifi_mel[0, :, :].detach().unsqueeze(-1).cpu()),
+                    "gpt/gen_dvae_mel": plot_spectrogram_to_numpy(dvae_mel[0, :, :].detach().unsqueeze(-1).cpu()),
+                    "gpt/gt_mel_1": plot_spectrogram_to_numpy(mel_padded[0, :, :].detach().unsqueeze(-1).cpu()),
+                }
+                audios_dict = {
+                    "gpt/gen_audio": wav_out,
+                    "gpt/gen_audio_2": audio,
+                    "gpt/gt_audio": wav[0, :, :].detach().cpu(),
+                }
+
+                summarize(
+                    writer=self.writer,
+                    global_step=self.step,
+                    images=image_dict,
+                    audios=audios_dict,
+                    audio_sampling_rate=self.sample_rate
+                )
+
+            try:
+                del self.gpt.gpt.wte
+            except Exception as e:
+                print(f'1. ---> {e}')
+            try:
+                del self.gpt.inference_model
+            except Exception as e:
+                print(f'2. ---> {e}')
+            try:
+                del self.gpt.wte
+            except Exception as e:
+                print(f'3. ---> {e}')
         self.gpt.train()
-        return total_losses, text_losses, mel_losses
 
 
 if __name__ == '__main__':
