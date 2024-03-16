@@ -13,3 +13,4 @@ nltk~=3.8.1
 gdown
 vocos~=0.1.0
 tokenizers
+phonemizer
