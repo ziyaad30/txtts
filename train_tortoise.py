@@ -83,7 +83,7 @@ class Trainer(object):
                                      pin_memory=self.cfg['gpt_dataloader']['pin_memory'],
                                      shuffle=self.cfg['gpt_dataloader']['shuffle'])
 
-        self.eval_dataloader = DataLoader(self.eval_dataset, batch_size=4, shuffle=False, num_workers=0,
+        self.eval_dataloader = DataLoader(self.eval_dataset, batch_size=1, shuffle=False, num_workers=0,
                                           pin_memory=False, collate_fn=self.eval_dataset.collate_fn)
 
         self.total_epochs = self.cfg['gpt_train']['train_epochs']
