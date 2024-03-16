@@ -110,6 +110,7 @@ class Trainer(object):
         self.text_loss_weight = self.cfg['gpt_train']['text_weight']
 
         self.writer = SummaryWriter(log_dir=os.path.join(self.logs_folder))
+        print(len(self.dataloader))
 
     def save(self):
         data = {
