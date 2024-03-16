@@ -1,6 +1,6 @@
 {
   "gpt_train": {
-    "train_file": "./dataset/valid.txt",
+    "train_file": "./dataset/train.txt",
     "valid_file": "./dataset/valid.txt",
     "mel_dir": "./mels",
     "logs_dir": "logs/gpt",
@@ -15,7 +15,7 @@
     "accum_grad": 1
   },
   "gpt_dataloader": {
-    "batch_size" : 4,
+    "batch_size" : 8,
     "shuffle": true,
     "num_workers": 0,
     "drop_last": false,
