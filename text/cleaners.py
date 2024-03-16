@@ -122,3 +122,28 @@ def arpa_cleaners(text):
 
     text = collapse_whitespace(text)
     return text
+
+
+def replace_symbols(text):
+    # text = text.replace('"', '')
+    text = text.replace(";", ",")
+    text = text.replace("-", " ")
+    text = text.replace(":", ",")
+    text = text.replace("&", " and ")
+    return text
+
+
+def remove_aux_symbols(text):
+    text = re.sub(r"[\<\>\(\)\[\]\"]+", "", text)
+    return text
+
+
+def phoneme_cleaners(text):
+    """Pipeline for phonemes mode, including number and abbreviation expansion."""
+    text = lowercase(text)
+    text = expand_numbers(text)
+    text = expand_abbreviations(text)
+    text = replace_symbols(text)
+    text = remove_aux_symbols(text)
+    text = collapse_whitespace(text)
+    return text
