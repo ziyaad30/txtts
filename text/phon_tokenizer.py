@@ -70,8 +70,8 @@ class PhonTokenizer:
         return txt
 
     def encode(self, txt):
-        txt = self.preprocess_text(txt)
-        ids = text_to_sequence(txt)
+        # txt = self.preprocess_text(txt)
+        ids = phoneme_to_sequence(txt)
         # print(self.decode(ids))
         return ids
 
