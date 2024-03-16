@@ -15,7 +15,7 @@
     "accum_grad": 1
   },
   "gpt_dataloader": {
-    "batch_size" : 8,
+    "batch_size" : 4,
     "shuffle": true,
     "num_workers": 0,
     "drop_last": false,
