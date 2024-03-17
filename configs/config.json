@@ -1,7 +1,7 @@
 {
   "gpt_train": {
-    "train_file": "./dataset/train_phon.txt",
-    "valid_file": "./dataset/valid.txt",
+    "train_file": "./train_dataset/train.txt",
+    "valid_file": "./train_dataset/valid.txt",
     "mel_dir": "./mels",
     "logs_dir": "logs/gpt",
     "seed": 0,
@@ -22,8 +22,8 @@
     "pin_memory": false
   },
   "vae_train": {
-    "train_file": "./dataset/train.txt",
-    "valid_file": "./dataset/valid.txt",
+    "train_file": "./train_dataset/train.txt",
+    "valid_file": "./train_dataset/valid.txt",
     "logs_dir": "logs/dvae",
     "pad_to_samples": 200,
     "sample_rate": 24000,
