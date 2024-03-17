@@ -81,11 +81,11 @@ class Trainer(object):
     def load(self):
         try:
             print('Loading saved model...')
-            # dvae_model_path = latest_checkpoint_path(f"{self.logs_folder}", f"dvae_[0-9]*")
-            dvae_model_path = "pretrained_models/dvae.pth"  # This is original dvae.pth
+            dvae_model_path = latest_checkpoint_path(f"{self.logs_folder}", f"dvae_[0-9]*")
+            # dvae_model_path = "pretrained_models/dvae.pth"  # This is original dvae.pth
             print(f'Loading model path {dvae_model_path}')
             dvae_checkpoint = torch.load(dvae_model_path, map_location="cpu")
-            # self.step = dvae_checkpoint['step'] + 1
+            self.step = dvae_checkpoint['step'] + 1
             if 'model' in dvae_checkpoint:
                 dvae_checkpoint = dvae_checkpoint['model']
             self.dvae.load_state_dict(dvae_checkpoint, strict=True)
