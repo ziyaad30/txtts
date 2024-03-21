@@ -2,9 +2,8 @@ import re
 import string
 
 import torch
-from sklearn.model_selection import train_test_split
 
-from text.cleaners import arpa_cleaners
+from text.cleaners import english_cleaners3
 
 token_symbols = [
     "[STOP]",
@@ -28,29 +27,72 @@ valid_symbols = [
     ";",
     "?",
     "AA",
+    "AA0",
+    "AA1",
+    "AA2",
     "AE",
+    "AE0",
+    "AE1",
+    "AE2",
     "AH",
+    "AH0",
+    "AH1",
+    "AH2",
     "AO",
+    "AO0",
+    "AO1",
+    "AO2",
     "AW",
+    "AW0",
+    "AW1",
+    "AW2",
     "AY",
+    "AY0",
+    "AY1",
+    "AY2",
     "CH",
     "DH",
     "EH",
+    "EH0",
+    "EH1",
+    "EH2",
     "ER",
+    "ER0",
+    "ER1",
+    "ER2",
     "EY",
+    "EY0",
+    "EY1",
+    "EY2",
     "HH",
     "IH",
-    "IX",
+    "IH0",
+    "IH1",
+    "IH2",
     "IY",
+    "IY0",
+    "IY1",
+    "IY2",
     "JH",
     "NG",
     "OW",
+    "OW0",
+    "OW1",
+    "OW2",
     "OY",
+    "OY0",
+    "OY1",
+    "OY2",
     "SH",
     "TH",
-    "TS",
     "UH",
+    "UH0",
+    "UH1",
+    "UH2",
     "UW",
+    "UW0",
+    "UW1",
+    "UW2",
     "ZH",
 ]
 
@@ -66,26 +108,6 @@ _symbol_to_id = {s: i for i, s in enumerate(new_symbols)}
 _id_to_symbol = {i: s for i, s in enumerate(new_symbols)}
 
 
-def remove_extraneous_punctuation(word):
-    replacement_punctuation = {
-        '{': '(',
-        '}': ')',
-        '[': '(',
-        ']': ')',
-        '—': '-',
-        '`': '\'',
-        'ʼ': '\''
-    }
-    replace = re.compile("|".join([re.escape(k) for k in sorted(replacement_punctuation, key=len, reverse=True)]),
-                         flags=re.DOTALL)
-    word = replace.sub(lambda x: replacement_punctuation[x.group(0)], word)
-
-    # TODO: some of these are spoken ('@', '%', '+', etc). Integrate them into the cleaners.
-    extraneous = re.compile(r'^[@#%_=\$\^&\*\+\\]$')
-    word = extraneous.sub('', word)
-    return word
-
-
 def _symbols_to_sequence(symbols):
     return [_symbol_to_id[s] for s in symbols]
 
@@ -95,7 +117,7 @@ def _arpabet_to_sequence(text):
 
 
 cmu_dict = {}
-with open('./text/en_dictionary') as f:
+with open('text/en_dictionary') as f:
     for entry in f:
         tokens = []
         for t in entry.split():
@@ -133,10 +155,7 @@ def text_to_sequence(text):
             if word == phn:
                 found = True
                 for p in pronunciation:
-                    try:
-                        sequence += _arpabet_to_sequence(p)
-                    except Exception as e:
-                        sequence += _arpabet_to_sequence('[UNK]')
+                    sequence += _arpabet_to_sequence(p)
                 break
 
         if not found:
@@ -144,29 +163,7 @@ def text_to_sequence(text):
                 if phn == ' ':
                     sequence += _symbols_to_sequence(' ')
                 else:
-                    if str(phn).__contains__('(') or str(phn).__contains__(')'):
-                        phn = phn.replace('(', '')
-                        phn = phn.replace(')', '')
-                        for word, pronunciation in cmu_dict.items():
-                            if word == phn:
-                                for p in pronunciation:
-                                    sequence += _symbols_to_sequence(p)
-
-                    elif str(phn).__contains__('.'):
-                        print(f'stop found in {phn}')
-                        with open(f"unknown.txt", 'a', encoding='utf-8') as f:
-                            f.write(phn + '\n')
-                        phn = phn.replace('.', '')
-                        for word, pronunciation in cmu_dict.items():
-                            if word == phn:
-                                for p in pronunciation:
-                                    sequence += _arpabet_to_sequence(p)
-
-                    else:
-                        # print(phn)
-                        with open(f"unknown.txt", 'a', encoding='utf-8') as f:
-                            f.write(phn + '\n')
-                        sequence += _arpabet_to_sequence('[UNK]')
+                    raise Exception(f'"{phn}" NOT FOUND IN DICTIONARY! ---> {text}')
             else:
                 sequence = sequence[:-1]
                 sequence += _symbols_to_sequence(phn)
@@ -179,8 +176,7 @@ class TextBpeTokenizer:
         print('Init TextBpeTokenizer')
 
     def preprocess_text(self, txt):
-        txt = arpa_cleaners(txt)
-        # txt = remove_extraneous_punctuation(txt)
+        txt = english_cleaners3(txt)
         return txt
 
     def encode(self, txt):
@@ -201,27 +197,6 @@ class TextBpeTokenizer:
 
 if __name__ == '__main__':
     tokenizer = TextBpeTokenizer()
-
-    """ids = tokenizer.encode("after absorption into the cells the elements of the starch (or glucose) are, by the living protoplasm, in some unknown way")
+    ids = tokenizer.encode("This is a test.")
     print(tokenizer.decode(ids))
-
-    print("number_text_tokens", tokenizer.vocab_size())"""
-
     print("number_text_tokens", tokenizer.vocab_size())
-
-    with open('../david_dataset/train.txt', encoding="utf8") as f:
-        lines = f.readlines()
-
-    train_data, valid_data = train_test_split(lines, test_size=0.2, random_state=1234, shuffle=True)
-
-    for text in train_data:
-        line = text.strip()
-        wav, txt2 = line.split("|")
-        ids = tokenizer.encode(txt2)
-        print(tokenizer.decode(ids))
-
-    for text in valid_data:
-        line = text.strip()
-        wav, txt2 = line.split("|")
-        ids = tokenizer.encode(txt2)
-        print(tokenizer.decode(ids))

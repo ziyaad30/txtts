@@ -57,19 +57,13 @@ def convert_to_ascii(text):
     return unidecode(text)
 
 
-def word_replacer(text):
-    text = re.sub(r"\ba.m.\b", "a(2) m", text)
-    text = re.sub(r"\bp.m.\b", "p m", text)
-    return text
-
-
 def english_cleaners(text):
     """Pipeline for English text, including number and abbreviation expansion."""
     text = text.strip()
-    text = lowercase(text)
     text = convert_to_ascii(text)
+    # text = text.replace('-', ' ')
     text = text.replace(':', ' ')
-    text = text.replace('"', '')
+    # text = text.replace('"', '')
     text = expand_numbers(text)
     text = expand_abbreviations(text)
     text = collapse_whitespace(text)
@@ -77,73 +71,37 @@ def english_cleaners(text):
 
 
 def english_cleaners2(text):
-    """Pipeline for English text, including number and abbreviation expansion."""
-    text = text.strip()
-    text = lowercase(text)
+    """Pipeline for English text, including abbreviation expansion."""
     text = convert_to_ascii(text)
-    text = text.replace(':', ' ')
-    text = text.replace('"', '')
-    # text = expand_numbers(text)
-    text = word_replacer(text)
+    text = lowercase(text)
     text = expand_abbreviations(text)
+    text = expand_numbers(text)
+    # text = phoneme_text(text)
     text = collapse_whitespace(text)
     return text
 
 
 def check_arpa_stress(text):
-    new_text = []
     for test in text.split(" "):
-        if test.isnumeric():
-            new_text.append(expand_numbers(test))
-        else:
-            new_text.append(test)
-    return_text = ' '.join(new_text)
-    return return_text
-
-
-def clean_apos(text):
-    rgx = re.compile(r"(?<!\w)\'|\'(?!\w)")
-    text = rgx.sub('', text)
+        if (test.endswith(')')
+                or test.endswith('),')
+                or test.endswith(').')
+                or test.endswith('!,')
+                or test.endswith('?,')
+                or test.endswith('):')
+                or test.endswith(');')):
+            return text
+    text = expand_numbers(text)
     return text
 
 
-def arpa_cleaners(text):
+def english_cleaners3(text):
     """Pipeline for English text, including abbreviation expansion."""
     text = convert_to_ascii(text)
     text = lowercase(text)
-    text = clean_apos(text)
     text = expand_abbreviations(text)
     text = text.replace('-', ' ')
     text = text.replace('"', '')
-    text = text.replace(':', ' ')
-    text = text.replace('[', ' ')
-    text = text.replace(']', ' ')
     text = check_arpa_stress(text)
-
-    text = collapse_whitespace(text)
-    return text
-
-
-def replace_symbols(text):
-    # text = text.replace('"', '')
-    text = text.replace(";", ",")
-    text = text.replace("-", " ")
-    text = text.replace(":", ",")
-    text = text.replace("&", " and ")
-    return text
-
-
-def remove_aux_symbols(text):
-    text = re.sub(r"[\<\>\(\)\[\]\"]+", "", text)
-    return text
-
-
-def phoneme_cleaners(text):
-    """Pipeline for phonemes mode, including number and abbreviation expansion."""
-    text = lowercase(text)
-    text = expand_numbers(text)
-    text = expand_abbreviations(text)
-    text = replace_symbols(text)
-    text = remove_aux_symbols(text)
     text = collapse_whitespace(text)
     return text
